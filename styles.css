@@ -1,0 +1,437 @@
+/* color vars */
+:root {
+  --bg: #171a18;
+  --surface: #222722;
+  --surface-soft: #292f29;
+
+  /* Text */
+  --text-main: #f4f3ec;
+  --text-muted: #c3c0b6;
+
+  /* Accents */
+  --accent-green: #9bbf7c;
+  --accent-green-soft: #6f8a5c;
+  --accent-maroon: #c16b70;
+
+  --accent-gold: #d6b673;
+
+  /* Other */
+  --charcoal: #1f2224;
+  --max-width: 1100px;
+  --gap: 28px;
+}
+
+/* base styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+section {
+  padding: 5rem 0;
+}
+
+/* nav */
+
+.site-header {
+  background: linear-gradient(to right, var(--charcoal), var(--surface-soft));
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+/* ============================
+   Scroll Down Button Styling
+   ============================ */
+
+.scroll-down-btn {
+  margin-top: 60px;
+  background: transparent;
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  padding: 10px 26px;
+  font-size: 14px;
+  border-radius: 30px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  font-family: "Inria Serif", serif;
+  transition: all 0.3s ease;
+  animation: bounceFade 2.4s infinite ease-in-out;
+}
+
+.scroll-down-btn:hover {
+  background: var(--accent-green);
+  color: var(--charcoal);
+  transform: translateY(-3px);
+}
+
+@keyframes bounceFade {
+  0% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+}
+
+/* ============================
+   Scroll Arrows Animation
+   ============================ */
+
+.scroll-arrows {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5px;
+}
+
+.arrow-layer {
+  width: 20px;
+  height: 20px;
+  border-left: 3px solid var(--accent-green);
+  border-bottom: 3px solid var(--accent-green);
+  transform: rotate(-45deg);
+  opacity: 0.3;
+  animation: arrowBounce 1.8s infinite;
+}
+
+.arrow-layer:nth-child(2) {
+  animation-delay: 0.2s;
+  opacity: 0.5;
+}
+
+.arrow-layer:nth-child(3) {
+  animation-delay: 0.4s;
+  opacity: 0.8;
+}
+
+@keyframes arrowBounce {
+  0% {
+    transform: translateY(0) rotate(-45deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(-45deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-45deg);
+  }
+}
+
+/* hero */
+
+.hero {
+  background: radial-gradient(circle at top, #252b25, var(--bg));
+  min-height: 100vh;
+  padding: 100px 20px 80px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-subtitle {
+  color: var(--accent-green);
+  font-family: "Inria Serif", serif;
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: 0.6px;
+  display: inline-block;
+  position: relative;
+}
+
+.hero-subtitle .accent-line {
+  display: inline-block;
+  width: 6px;
+  height: 50px;
+  background: var(--accent-green);
+  margin-right: 12px;
+  vertical-align: middle;
+  transform: translateY(-2px);
+  border-radius: 3px;
+  opacity: 0.9;
+}
+
+.hero-title {
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  margin: 40px 0 0;
+  font-weight: 700;
+  font-size: 70px;
+  line-height: 1.1;
+  color: var(--text-main);
+}
+
+/* HISTORY + TEXT BAND */
+
+body section.history-root {
+  background: var(--surface);
+}
+
+.history-root {
+  padding: 5rem 0 1.5rem;
+}
+
+.history-info {
+  padding-top: 0;
+}
+
+.history-root .info-block.green {
+  background: transparent;
+}
+
+/* headings */
+
+.section-title {
+  text-align: center;
+  margin: 26px 0 18px;
+  font-family: "Bricolage Grotesque", system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--text-main);
+}
+
+/* layout */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 40px 24px;
+}
+
+.two-col {
+  display: flex;
+  align-items: flex-start;
+  gap: 36px;
+}
+
+/* side headings */
+
+.side-heading {
+  width: 230px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.side-heading h3 {
+  font-family: "Inria Serif", serif;
+  margin: 0;
+  line-height: 1.05;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  text-align: right;
+  padding-right: 18px;
+  border-right: 3px solid var(--accent-green);
+}
+
+.side-heading .muted {
+  display: block;
+  font-size: 13px;
+  color: var(--accent-green);
+  margin-top: 6px;
+}
+
+.rotating-word {
+  display: inline-block;
+  position: relative;
+  transition: opacity 0.8s ease-in-out;
+}
+
+.rotating-word.fade-out {
+  opacity: 0;
+}
+
+.rotating-word.fade-in {
+  opacity: 1;
+}
+
+/* ============================================================
+   TIKTOK CAROUSEL — SMALL CARDS + INFINITE LOOP
+   ============================================================ */
+
+   .tiktok-carousel-section {
+    background: var(--surface-soft);
+    padding: 50px 0 50px;
+    text-align: center;
+  }
+  
+  .tiktok-carousel-title {
+    color: var(--text-main);
+    font-family: "Inria Serif", serif;
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+  
+  /* Outer wrapper for infinite scrolling */
+  .tiktok-carousel-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Scrolling track */
+  .tiktok-carousel {
+    display: flex;
+    gap: 20px;
+    animation: scrollLoop 22s linear infinite;
+    padding: 10px 0;
+  }
+  
+  /* Each video card */
+  .tiktok-slide {
+    flex: 0 0 auto;
+    width: 220px; /* much smaller */
+    height: 380px; /* compact card height */
+    background: var(--surface);
+    padding: 10px;
+    border-radius: 14px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.25);
+    overflow: hidden;
+    transform: scale(0.85); /* shrink full embed */
+    transform-origin: top center;
+  }
+  
+  /* Reduce iframe size inside TikTok embed */
+  .tiktok-embed iframe {
+    transform: scale(0.75) translateX(-15%);
+    transform-origin: top center;
+    width: 310px !important;   /* override TikTok width */
+    height: 600px !important;  /* override TikTok height */
+  }
+  
+  /* Infinite scrolling keyframes */
+  @keyframes scrollLoop {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  
+  /* Hide scrollbar if any */
+  .tiktok-carousel::-webkit-scrollbar {
+    display: none;
+  }
+  
+
+/* generic content */
+
+.content {
+  flex: 1;
+}
+
+.content p {
+  margin: 0;
+  text-align: left;
+  font-size: 14px;
+  color: var(--text-main);
+  font-weight: 400;
+}
+
+/* info blocks */
+
+.info-block.green {
+  background: var(--surface);
+  padding: 0 0 20px 0;
+  position: relative;
+}
+
+.info-block.pale-green {
+  background: var(--surface-soft);
+  padding: 0 0 20px 0;
+  position: relative;
+}
+
+/* footer */
+
+.footer-band {
+  padding: 36px 0 50px;
+  background: var(--charcoal);
+}
+
+/* responsiveness */
+
+@media (max-width: 980px) {
+  .side-heading {
+    width: 180px;
+  }
+
+  .slot {
+    width: 56px;
+    height: 56px;
+  }
+
+  .slot.active {
+    width: 72px;
+    height: 72px;
+  }
+}
+
+@media (max-width: 720px) {
+  .container {
+    padding: 24px 16px;
+    flex-direction: column;
+  }
+
+  .two-col {
+    flex-direction: column;
+  }
+
+  .side-heading h3 {
+    border-right: 0;
+    text-align: left;
+  }
+
+  .hero {
+    min-height: 80vh;
+    padding: 80px 16px 60px;
+  }
+
+  .right-arrow,
+  .left-arrow {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .tiktok-slide {
+    min-width: 260px;
+    min-height: 380px;
+  }
+}
