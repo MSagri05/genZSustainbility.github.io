@@ -232,16 +232,16 @@ document.addEventListener("DOMContentLoaded", () => {
    Smooth Scroll to First Section
    ============================ */
 
-   function scrollToSection() {
-    const nextSection = document.querySelector(".history-root");
-    if (nextSection) {
-      nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+function scrollToSection() {
+  const nextSection = document.querySelector(".history-root");
+  if (nextSection) {
+    nextSection.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  
-  /* ============================
-   Cross-Dissolve Word Swap
-   ============================ */
+}
+
+/* ============================
+ Cross-Dissolve Word Swap
+ ============================ */
 
 document.addEventListener("DOMContentLoaded", () => {
   const wordEl = document.querySelector(".rotating-word");
@@ -271,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setInterval(swapWord, 2300);
 });
-
 
 // Fashion history section
 d3.csv("./assets/fashion_history.csv").then((fashion) => {
@@ -441,7 +440,6 @@ if (hashtagChartTarget && window.vegaEmbed) {
           type: "bar",
           cornerRadiusTopLeft: 4,
           cornerRadiusTopRight: 4,
-    
         },
         encoding: {
           x: {
@@ -456,7 +454,6 @@ if (hashtagChartTarget && window.vegaEmbed) {
             field: "Number of Posts on Tiktok",
             type: "quantitative",
             title: "Number of TikTok posts",
-
             axis: { format: ".2s" },
           },
           // all bars accent green
@@ -558,16 +555,16 @@ if (sustainableTrendsChartTarget && window.vegaEmbed) {
     background: "transparent",
     mark: {
       type: "line",
-      color: "#9bbf7c",        // line color
+      color: "#9bbf7c", // line color
       point: {
-        size: 80,              // BIGGER DOTS
+        size: 80, // BIGGER DOTS
         filled: true,
-        color: "#9bbf7c",      // dot fill color
-        stroke: "#d6b673",    
-        strokeWidth: 1.5
-      }
+        color: "#9bbf7c", // dot fill color
+        stroke: "#d6b673",
+        strokeWidth: 1.5,
+      },
     },
-    
+
     transform: [
       { filter: 'datum.Eco_Friendly_Manufacturing === "Yes"' },
       { aggregate: [{ op: "count", as: "EcoCount" }], groupby: ["Year"] },
@@ -605,3 +602,570 @@ if (sustainableTrendsChartTarget && window.vegaEmbed) {
   };
   vegaEmbed("#sustainableTrendsChart", sustainableTrendsSpec);
 }
+
+/* ============================
+   Material images (for tooltip)
+   ============================ */
+
+const materialImages = {
+  "Bamboo Fabric": "./assets/materials/bamboo.jpeg",
+  "Organic Cotton": "./assets/materials/cotton.jpg",
+  Hemp: "./assets/materials/hemp.jpg",
+  "Vegan Leather": "./assets/materials/leather.jpg",
+  "Recycled Polyester": "./assets/materials/polyester.jpg",
+  Tencel: "./assets/materials/tencel.jpg",
+};
+
+/* ============================
+   Sustainable Materials vs Carbon Impact
+   ============================ */
+
+(() => {
+  const container = document.getElementById("materialsChart");
+  if (!container || !window.d3) return;
+
+  // clear container (safe if reloaded)
+  container.innerHTML = "";
+
+  d3.csv("./assets/material.csv").then((raw) => {
+    // expected headers: Brand_Name, Material_Type, Carbon_Footprint_MT
+    const cleaned = raw
+      .map((d) => ({
+        Brand_Name: (d.Brand_Name || "").trim(),
+        Material_Type: (d.Material_Type || "").trim(),
+        Carbon_Footprint_MT: +d.Carbon_Footprint_MT,
+      }))
+      .filter(
+        (d) =>
+          d.Material_Type &&
+          d.Brand_Name &&
+          Number.isFinite(d.Carbon_Footprint_MT)
+      );
+
+    // aggregate per material
+    const materialStats = d3
+      .rollups(
+        cleaned,
+        (v) => ({
+          // count UNIQUE brands per material
+          brands: new Set(v.map((d) => d.Brand_Name)).size,
+          avgCarbon: d3.mean(v, (d) => d.Carbon_Footprint_MT),
+        }),
+        (d) => d.Material_Type
+      )
+      .map(([Material_Type, values]) => ({
+        Material_Type,
+        brands: values.brands,
+        avgCarbon: values.avgCarbon,
+      }))
+      // most-used first
+      .sort((a, b) => d3.descending(a.brands, b.brands));
+
+    const width = 900;
+    const height = 460;
+    const margin = { top: 30, right: 30, bottom: 90, left: 80 };
+
+    const defaultColor = "#6f8a5c";
+    const hoverColor = "#9bbf7c";
+
+    const svg = d3
+      .select(container)
+      .append("svg")
+      .attr("viewBox", [0, 0, width, height]);
+
+    const x = d3
+      .scaleBand()
+      .domain(materialStats.map((d) => d.Material_Type))
+      .range([margin.left, width - margin.right])
+      .padding(0.22);
+
+    const yMax = d3.max(materialStats, (d) => d.avgCarbon) ?? 0;
+    const y = d3
+      .scaleLinear()
+      .domain([0, yMax])
+      .nice()
+      .range([height - margin.bottom, margin.top]);
+
+    // axes
+    const xAxis = (g) =>
+      g
+        .attr("transform", `translate(0,${height - margin.bottom})`)
+        .call(d3.axisBottom(x))
+        .call((g) =>
+          g.select(".domain").attr("stroke", "rgba(252,239,233,0.4)")
+        )
+        .call((g) =>
+          g
+            .selectAll("text")
+            .style("font-size", "11px")
+            .style("fill", "#fcefe9")
+            .attr("transform", "rotate(-20)")
+            .style("text-anchor", "end")
+        )
+        .call((g) =>
+          g.selectAll("line").attr("stroke", "rgba(252,239,233,0.4)")
+        );
+
+    const yAxis = (g) =>
+      g
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(y))
+        .call((g) =>
+          g.select(".domain").attr("stroke", "rgba(252,239,233,0.4)")
+        )
+        .call((g) =>
+          g.selectAll("line").attr("stroke", "rgba(252,239,233,0.4)")
+        )
+        .call((g) =>
+          g
+            .selectAll("text")
+            .style("font-size", "11px")
+            .style("fill", "#fcefe9")
+        );
+
+    svg.append("g").call(xAxis);
+    svg.append("g").call(yAxis);
+
+    // axis labels
+    svg
+      .append("text")
+      .attr("x", width / 2)
+      .attr("y", height - 28)
+      .attr("text-anchor", "middle")
+      .style("font-size", "13px")
+      .style("fill", "#fcefe9")
+      .text("Material type");
+
+    svg
+      .append("text")
+      .attr("x", -height / 2)
+      .attr("y", 26)
+      .attr("transform", "rotate(-90)")
+      .attr("text-anchor", "middle")
+      .style("font-size", "13px")
+      .style("fill", "#fcefe9")
+      .text("Average CO₂ footprint (per MT)");
+
+    // tooltip panel (below chart)
+    const tooltip = document.createElement("div");
+    tooltip.style.display = "flex";
+    tooltip.style.flexDirection = "column";
+    tooltip.style.alignItems = "center";
+    tooltip.style.justifyContent = "center";
+    tooltip.style.textAlign = "center";
+    tooltip.style.margin = "14px auto 0";
+    tooltip.style.marginTop = "14px";
+    tooltip.style.padding = "10px 12px";
+    tooltip.style.borderRadius = "12px";
+    tooltip.style.border = "1px solid rgba(252,239,233,0.25)";
+    tooltip.style.background = "rgba(34,39,34,0.85)";
+    tooltip.style.color = "#fcefe9";
+    tooltip.style.fontSize = "15px";
+    tooltip.style.maxWidth = "900px";
+    tooltip.textContent = "Hover over a bar to see material details.";
+    container.appendChild(tooltip);
+    tooltip.style.display = "flex";
+    tooltip.style.justifyContent = "center";
+    tooltip.style.textAlign = "center";
+
+    // bars
+    const bars = svg
+      .append("g")
+      .selectAll("rect")
+      .data(materialStats)
+      .join("rect")
+      .attr("x", (d) => x(d.Material_Type))
+      .attr("y", (d) => y(d.avgCarbon))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => y(0) - y(d.avgCarbon))
+      .attr("rx", 4)
+      .attr("fill", defaultColor)
+      .on("mouseenter", (event, d) => {
+        bars.attr("fill", defaultColor);
+        d3.select(event.currentTarget).attr("fill", hoverColor);
+
+        tooltip.innerHTML = `
+  <div style="display:flex;gap:14px;align-items:center;">
+    <img 
+      src="${materialImages[d.Material_Type] || ""}" 
+      alt="${d.Material_Type}"
+      style="
+        width:80px;
+        height:80px;
+        object-fit:cover;
+        border-radius:10px;
+        flex-shrink:0;
+      "
+    />
+    <div>
+      <strong>${d.Material_Type}</strong><br>
+      Brands using this material: <b>${d.brands}</b><br>
+      Avg CO₂ footprint: <b>${d.avgCarbon.toFixed(1)}</b>
+    </div>
+  </div>
+`;
+      })
+      .on("mouseleave", () => {
+        bars.attr("fill", defaultColor);
+        tooltip.textContent = "Hover over a bar to see material details.";
+      });
+
+    // labels above bars: number of brands
+    svg
+      .append("g")
+      .selectAll("text.label")
+      .data(materialStats)
+      .join("text")
+      .attr("class", "label")
+      .attr("x", (d) => x(d.Material_Type) + x.bandwidth() / 2)
+      .attr("y", (d) => y(d.avgCarbon) - 8)
+      .attr("text-anchor", "middle")
+      .style("font-size", "10px")
+      .style("fill", "#d6b673")
+      .text((d) => `${d.brands} brands`);
+  });
+})();
+
+/* =========================================================
+   Go Sustainable IRL: Thrift Near You (Canada Map) — NEW
+   NO DEFAULT LOCATION (user must click or search)
+   FIXED: circles shrink on zoom without breaking render
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const mount = document.getElementById("thriftMap");
+  const nearestMount = document.getElementById("thriftNearest");
+  const btnUseLoc = document.getElementById("thriftUseLocation");
+  const input = document.getElementById("thriftAddress");
+  const btnSearch = document.getElementById("thriftSearch");
+
+  // If thrift section isn't present on the page, do nothing
+  if (!mount || !nearestMount) return;
+
+  // Safety checks
+  if (!window.d3) {
+    console.warn("D3 not found. Make sure d3.v7 is included before script.js");
+    return;
+  }
+  if (!window.topojson) {
+    console.warn(
+      "topojson-client not found. Add: <script src='https://unpkg.com/topojson-client@3'></script>"
+    );
+    return;
+  }
+
+  const WIDTH = 900;
+  const HEIGHT = 560;
+
+  // NO DEFAULT LOCATION
+  let myLocation = null;
+
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  const haversineKm = (a, b) => {
+    const toRad = (d) => (d * Math.PI) / 180;
+    const R = 6371;
+    const dLat = toRad(b.lat - a.lat);
+    const dLon = toRad(b.lon - a.lon);
+    const lat1 = toRad(a.lat);
+    const lat2 = toRad(b.lat);
+
+    const x =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLon / 2) ** 2;
+
+    return 2 * R * Math.asin(Math.sqrt(x));
+  };
+
+  const getNearest = (points, me, n = 10) =>
+    points
+      .map((p) => ({ ...p, km: haversineKm(me, p) }))
+      .sort((a, b) => a.km - b.km)
+      .slice(0, n);
+
+  const renderEmptyState = () => {
+    nearestMount.innerHTML = `
+      <h3 class="thrift-list-title">Nearest thrift shops</h3>
+      <p class="thrift-muted">Click “Use my current location” or search a city to see results.</p>
+    `;
+    mount.innerHTML = `
+      <div class="thrift-empty">
+        Choose a location to load the map.
+      </div>
+    `;
+  };
+
+  const renderNearestList = (nearest) => {
+    nearestMount.innerHTML = `
+      <h3 class="thrift-list-title">Nearest thrift shops</h3>
+      <ol class="thrift-ol">
+        ${nearest
+          .map(
+            (d) => `
+          <li>
+            <strong>${escapeHtml(d.name)}</strong><br>
+            <span class="thrift-muted">${escapeHtml(
+              [d.street, d.city].filter(Boolean).join(", ") ||
+                "Exact address not available"
+            )}</span><br>
+            <span class="thrift-dist">${d.km.toFixed(2)} km</span>
+          </li>`
+          )
+          .join("")}
+      </ol>
+    `;
+  };
+
+  async function loadData() {
+    const world = await d3.json(
+      "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json"
+    );
+    const countries = window.topojson.feature(world, world.objects.countries);
+
+    const canadaGeo = countries.features.find(
+      (d) => d?.properties?.name === "Canada"
+    );
+    if (!canadaGeo) throw new Error("Could not find Canada geometry.");
+
+    const thriftGeo = await d3.json("./assets/canada_thrift.geojson");
+    const feats = thriftGeo.features ?? [];
+
+    const thriftPoints = feats
+      .map((f) => {
+        const coords = f?.geometry?.coordinates;
+        if (!coords || coords.length < 2) return null;
+
+        const [lon, lat] = coords;
+        const p = f.properties ?? {};
+
+        return {
+          lat,
+          lon,
+          name:
+            p.name ||
+            p.operator ||
+            p.brand ||
+            p.shop ||
+            p["@id"] ||
+            "Thrift shop",
+          city: p.city || p["addr:city"] || "",
+          street: p.street || p["addr:street"] || "",
+        };
+      })
+      .filter((d) => d && Number.isFinite(d.lat) && Number.isFinite(d.lon));
+
+    return { canadaGeo, thriftPoints };
+  }
+
+  function renderMap({ canadaGeo, thriftPoints }) {
+    if (!myLocation) {
+      renderEmptyState();
+      return;
+    }
+
+    mount.innerHTML = "";
+
+    const container = document.createElement("div");
+    container.className = "thrift-map-wrap";
+    container.style.position = "relative";
+    container.style.maxWidth = WIDTH + "px";
+
+    const tip = document.createElement("div");
+    tip.className = "thrift-tooltip";
+    container.appendChild(tip);
+
+    const svg = d3
+      .create("svg")
+      .attr("viewBox", [0, 0, WIDTH, HEIGHT])
+      .attr("class", "thrift-svg");
+
+    const projection = d3.geoMercator().fitSize([WIDTH, HEIGHT], canadaGeo);
+    const path = d3.geoPath(projection);
+
+    const g = svg.append("g");
+
+    g.append("path")
+      .datum(canadaGeo)
+      .attr("d", path)
+      .attr("fill", "#f2f2f2")
+      .attr("stroke", "#2a3029")
+      .attr("stroke-width", 1.2);
+
+    const xy = (d) => projection([d.lon, d.lat]);
+
+    const nearest = getNearest(thriftPoints, myLocation, 10);
+    renderNearestList(nearest);
+
+    const nearestSet = new Set(
+      nearest.map((d) => `${d.lat},${d.lon},${d.name}`)
+    );
+
+    // helper MUST be after nearestSet exists (fixes crash)
+    const baseRadius = (d, k) =>
+      nearestSet.has(`${d.lat},${d.lon},${d.name}`)
+        ? Math.max(1.6, 4.2 / k)
+        : Math.max(1.2, 2.8 / k);
+
+    const dots = g
+      .append("g")
+      .selectAll("circle")
+      .data(thriftPoints)
+      .join("circle")
+      .attr("cx", (d) => xy(d)[0])
+      .attr("cy", (d) => xy(d)[1])
+      .attr("r", (d) => baseRadius(d, 1))
+      .attr("fill", "#9bc07e")
+      .attr("opacity", (d) =>
+        nearestSet.has(`${d.lat},${d.lon},${d.name}`) ? 0.95 : 0.55
+      )
+      .attr("stroke", "#2a3029")
+      .attr("stroke-width", 0.4);
+
+    const meXY = projection([myLocation.lon, myLocation.lat]);
+    const meDot = g
+      .append("circle")
+      .attr("cx", meXY[0])
+      .attr("cy", meXY[1])
+      .attr("r", 6)
+      .attr("fill", "#2a3029")
+      .attr("stroke", "white")
+      .attr("stroke-width", 2);
+
+    const meLabel = g
+      .append("text")
+      .attr("x", meXY[0] + 8)
+      .attr("y", meXY[1] + 4)
+      .text("You")
+      .style("font-size", "12px")
+      .style("fill", "#2a3029");
+
+    dots
+      .on("mouseenter", function (event, d) {
+        d3.select(this).attr("opacity", 1).attr("r", 6).attr("stroke-width", 1.2);
+
+        const km = haversineKm(myLocation, d);
+
+        tip.innerHTML = `
+          <div class="thrift-tip-title">${escapeHtml(d.name)}</div>
+          <div class="thrift-tip-sub">${escapeHtml(
+            [d.street, d.city].filter(Boolean).join(", ") ||
+              "Exact address not available"
+          )}</div>
+          <div>Distance: <strong>${km.toFixed(2)} km</strong></div>
+        `;
+        tip.style.opacity = 1;
+      })
+      .on("mousemove", function (event) {
+        const bounds = container.getBoundingClientRect();
+        tip.style.left = event.clientX - bounds.left + 14 + "px";
+        tip.style.top = event.clientY - bounds.top + 14 + "px";
+      })
+      .on("mouseleave", function () {
+        d3.select(this).attr("opacity", 0.65).attr("r", baseRadius(d3.select(this).datum(), 1)).attr("stroke-width", 0.4);
+        tip.style.opacity = 0;
+      });
+
+    // Zoom / pan (shrink circles with zoom)
+    const zoom = d3
+      .zoom()
+      .scaleExtent([1, 12])
+      .on("zoom", (event) => {
+        g.attr("transform", event.transform);
+
+        const k = event.transform.k;
+
+        dots
+          .attr("r", (d) => baseRadius(d, k))
+          .attr("stroke-width", Math.max(0.2, 0.4 / k));
+
+        // keep "You" marker readable too
+        meDot.attr("r", Math.max(3.5, 6 / k));
+        meLabel.style("font-size", `${Math.max(9, 12 / k)}px`);
+      });
+
+    svg.call(zoom);
+
+    // Auto-zoom toward your location
+    const k0 = 3.2;
+    const tx = WIDTH / 2 - meXY[0] * k0;
+    const ty = HEIGHT / 2 - meXY[1] * k0;
+    svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(k0));
+
+    container.appendChild(svg.node());
+    mount.appendChild(container);
+  }
+
+  async function useBrowserLocation() {
+    return await new Promise((resolve) => {
+      if (!navigator.geolocation) return resolve(null);
+
+      navigator.geolocation.getCurrentPosition(
+        (pos) =>
+          resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+        () => resolve(null),
+        { enableHighAccuracy: true, timeout: 8000 }
+      );
+    });
+  }
+
+  async function geocodeAddress(q) {
+    const url =
+      "https://nominatim.openstreetmap.org/search?format=json&limit=1&q=" +
+      encodeURIComponent(q);
+
+    const res = await fetch(url, { headers: { "Accept-Language": "en" } });
+    const data = await res.json();
+    if (!data || !data.length) return null;
+
+    return { lat: +data[0].lat, lon: +data[0].lon };
+  }
+
+  let cached = null;
+
+  renderEmptyState();
+
+  (async () => {
+    try {
+      cached = await loadData();
+      // wait for user action (no default location)
+    } catch (err) {
+      mount.innerHTML = `<div class="thrift-error">Map failed to load: ${escapeHtml(
+        err?.message || err
+      )}</div>`;
+      console.error(err);
+    }
+  })();
+
+  btnUseLoc &&
+    btnUseLoc.addEventListener("click", async () => {
+      const loc = await useBrowserLocation();
+      if (!loc) return;
+      myLocation = loc;
+      if (cached) renderMap(cached);
+    });
+
+  btnSearch &&
+    btnSearch.addEventListener("click", async () => {
+      const q = input?.value?.trim();
+      if (!q) return;
+
+      const loc = await geocodeAddress(q);
+      if (!loc) return;
+
+      myLocation = loc;
+      if (cached) renderMap(cached);
+    });
+
+  input &&
+    input.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter") return;
+      btnSearch?.click();
+    });
+});

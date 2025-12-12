@@ -12,6 +12,9 @@
         rel="stylesheet">
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+
+
 
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="viz.css" />
@@ -340,6 +343,67 @@
                 </div>
             </div>
         </section>
+
+        <section class="chart-section pale-green">
+            <div class="container">
+              <h2 class="section-title">
+                Which materials are most widely used by brands, and how do they compare in carbon footprint?
+              </h2>
+          
+              <p class="section-subtitle">
+                Sustainable Materials vs. Carbon Impact Across Fashion Brands
+              </p>
+          
+              <!-- D3 materials chart -->
+              <div id="materialsChart" class="image-placeholder"></div>
+          
+              <div class="text-block">
+                <p class="chart-text small">
+                  This chart compares different sustainable materials by showing how many brands use them and how much CO₂ each one produces on average. We found that materials like Recycled Polyester, Hemp, and Vegan Leather are used by the most brands, but they also tend to have higher carbon footprints. Meanwhile, materials such as Tencel and Organic Cotton have slightly lower CO₂ impacts, even though they are used by a similar number of brands. Overall, the visualization shows that while many companies are shifting to sustainable materials, not all materials are equally good for the environment, some still create more emissions than expected.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section class="chart-section green" id="thrift-near-you">
+            <div class="container">
+              <h2 class="section-title">If Sustainable Fashion Is the Trend, What Does It Look Like in Real Life?</h2>
+              <p class="chart-text chart-caption">
+                Find thrift stores near you across Canada. Use your current location, or type a city to explore.
+                Hover a point to see shop details and distance.
+              </p>
+          
+              <div class="thrift-app">
+                <div class="thrift-controls">
+                    <button class="btn thrift-btn thrift-primary" id="thriftUseLocation">
+                        Use my current location
+                      </button>
+                      
+          
+                  <label class="thrift-label" for="thriftAddress">Or type your location (city/address)</label>
+                  <div class="thrift-row">
+                    <input
+                      class="thrift-input"
+                      id="thriftAddress"
+                      type="text"
+                      placeholder="e.g., Vancouver, BC"
+                      autocomplete="off"
+                    />
+                    <button class="btn thrift-btn" id="thriftSearch">Search</button>
+                  </div>
+          
+                  <p class="thrift-hint">Scroll to zoom, drag to pan.</p>
+                </div>
+          
+                <div class="thrift-grid">
+                  <div class="thrift-map" id="thriftMap"></div>
+                  <div class="thrift-list" id="thriftNearest"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+          
+          
 
     </main>
 
