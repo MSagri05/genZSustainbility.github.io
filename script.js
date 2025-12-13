@@ -581,7 +581,7 @@ if (sustainableTrendsChartTarget && window.vegaEmbed) {
         {
           field: "EcoCount",
           type: "quantitative",
-          title: "Eco-Friendly Count",
+          title: "Eco-Friendly Brands Count",
         },
       ],
     },
