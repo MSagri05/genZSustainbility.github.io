@@ -1,7 +1,7 @@
 /* charts */
 
 .chart-section.maroon {
-  background: radial-gradient(circle at top, #3d2426, var(--accent-maroon));
+  background: radial-gradient(circle at top, #0ee066f0, var(--accent-black));
   color: #fcefe9;
   padding: 20px 0 60px;
 }
