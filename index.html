@@ -21,7 +21,7 @@
 <body>
   <!-- nav -->
   <header class="site-header">
-   
+
   </header>
 
   <main>
@@ -99,7 +99,7 @@
         <p class="section-subtitle">How Fashion Searches Changed - Thrift Takes the Lead</p>
 
         <!-- fixed legend (does not scroll horizontally) -->
-        <div class="chart-legend-static" aria-label="Chart legend">
+        <div class="chart-legend-static" role="group" aria-label="Chart legend">
           <span class="legend-item">
             <span class="legend-swatch legend-swatch-poshmark" aria-hidden="true"></span>
             <span class="legend-label">Poshmark</span>
@@ -123,7 +123,8 @@
           <!-- chart container (only this part scrolls sideways) -->
           <div class="chart-scroll-wrapper">
             <div class="chart-scroll-inner">
-              <div id="comparisonTrendChart" class="vega-chart" aria-label="Google Trends comparison chart"></div>
+              <div id="comparisonTrendChart" class="vega-chart" role="img"
+                aria-label="Google Trends comparison chart"></div>
             </div>
           </div>
         </div>
@@ -153,6 +154,8 @@
     </section>
 
     <section class="info-block pale-green" aria-labelledby="why-rising-title">
+      
+
       <div class="container two-col">
         <aside class="side-heading">
           <h3 id="why-rising-title">Why<br>Sustainable<br>Fashion Is<br>Rising
@@ -207,14 +210,14 @@
         </p>
       </div>
     </div>
-   
 
     <section class="chart-section pale-green" aria-labelledby="tiktok-trends-title">
       <div class="container">
-        <h2 class="section-title" id="tiktok-trends-title">Which Sustainable Fashion Trends Are Gen Z Pushing on TikTok?</h2>
+        <h2 class="section-title" id="tiktok-trends-title">Which Sustainable Fashion Trends Are Gen Z Pushing on TikTok?
+        </h2>
         <p class="section-subtitle">How did trends Make this shift?</p>
 
-        <div id="hashtagChart" class="image-placeholder" aria-label="TikTok hashtag chart"></div>
+        <div id="hashtagChart" class="image-placeholder" role="img" aria-label="TikTok hashtag chart"></div>
 
         <div class="text-block">
           <p class="chart-text small">
@@ -242,9 +245,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@elisasgn/video/7394190662058478881?autoplay=1&muted=1"
               data-video-id="7394190662058478881">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@elisasgn">@elisasgn</a> When the thrift haul is good >>>>
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -253,9 +256,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@samm.young/video/7556046568755891487?autoplay=1&muted=1"
               data-video-id="7556046568755891487">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@samm.young">@samm.young</a> your closet will thank me later
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -264,9 +267,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@ivsamss/video/7351444836030958891?autoplay=1&muted=1"
               data-video-id="7351444836030958891">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@ivsamss">@ivsamss</a> Let’s go thrifting ✌🏻
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -275,9 +278,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@the.navarose/video/7345590071824895275?autoplay=1&muted=1"
               data-video-id="7345590071824895275">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@the.navarose">@the.navarose</a> thrift couture 🌱
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -286,9 +289,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@elisasgn/video/7394190662058478881?autoplay=1&muted=1"
               data-video-id="7394190662058478881">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@elisasgn">@elisasgn</a> When the thrift haul is good >>>>
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -296,9 +299,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@samm.young/video/7556046568755891487?autoplay=1&muted=1"
               data-video-id="7556046568755891487">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@samm.young">@samm.young</a> your closet will thank me later
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -306,9 +309,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@ivsamss/video/7351444836030958891?autoplay=1&muted=1"
               data-video-id="7351444836030958891">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@ivsamss">@ivsamss</a> Let’s go thrifting ✌🏻
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -316,9 +319,9 @@
             <blockquote class="tiktok-embed"
               cite="https://www.tiktok.com/@the.navarose/video/7345590071824895275?autoplay=1&muted=1"
               data-video-id="7345590071824895275">
-              <section>
+              <div>
                 <a href="https://www.tiktok.com/@the.navarose">@the.navarose</a> thrift couture 🌱
-              </section>
+              </div>
             </blockquote>
           </div>
 
@@ -333,7 +336,8 @@
           spaces shift toward eco-friendly manufacturing over time?
         </h2>
 
-        <div id="sustainableTrendsChart" class="image-placeholder" aria-label="Eco-friendly manufacturing chart"></div>
+        <div id="sustainableTrendsChart" class="image-placeholder" role="img"
+          aria-label="Eco-friendly manufacturing chart"></div>
 
         <div class="text-block">
           <p class="chart-text small">
@@ -362,7 +366,7 @@
         </p>
 
         <!-- D3 materials chart -->
-        <div id="materialsChart" class="image-placeholder" aria-label="Sustainable materials chart"></div>
+        <div id="materialsChart" class="image-placeholder" role="img" aria-label="Sustainable materials chart"></div>
 
         <div class="text-block">
           <p class="chart-text small">
@@ -393,8 +397,7 @@
 
             <label class="thrift-label" for="thriftAddress">Or type your location (city/address)</label>
             <div class="thrift-row">
-              <input class="thrift-input" id="thriftAddress" type="text" placeholder="e.g., Vancouver, BC"
-                autocomplete="off" />
+              <input class="thrift-input" id="thriftAddress" type="text" placeholder="e.g., Vancouver, BC" autocomplete="off" />
               <button class="btn thrift-btn" id="thriftSearch" type="button">Search</button>
             </div>
 
@@ -402,8 +405,8 @@
           </div>
 
           <div class="thrift-grid">
-            <div class="thrift-map" id="thriftMap" aria-label="Map of thrift stores"></div>
-            <div class="thrift-list" id="thriftNearest" aria-label="Nearest thrift stores list"></div>
+            <div class="thrift-map" id="thriftMap" role="region" aria-label="Map of thrift stores"></div>
+            <div class="thrift-list" id="thriftNearest" role="region" aria-label="Nearest thrift stores list"></div>
           </div>
         </div>
       </div>
