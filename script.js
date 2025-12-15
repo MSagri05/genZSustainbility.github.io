@@ -1,3 +1,10 @@
+// script.js overview...
+// - handles all the carousels and navigation interactions
+// - runs the hero text animation and rotating words
+// - loads and controls all the charts and visualizations
+// - powers the thrift map experience at the end
+
+
 document.addEventListener("DOMContentLoaded", () => {
   // all carousels
   const carousels = document.querySelectorAll(".carousel");

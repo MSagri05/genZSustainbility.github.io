@@ -1,3 +1,8 @@
+/* styles.css overview...*/
+/* this is my main styling file... it sets the colors + fonts, handles the overall layout, and styles the main sections like nav, hero, history text band, tiktok carousel, and general responsiveness...*/
+
+/*----------------*/
+
 /* color vars */
 :root {
   --bg: #171a18;
@@ -20,6 +25,8 @@
   --max-width: 1100px;
   --gap: 28px;
 }
+
+/*----------------*/
 
 /* base styles */
 *,
@@ -49,6 +56,8 @@ section {
   padding: 5rem 0;
 }
 
+/*----------------*/
+
 /* nav */
 
 .site-header {
@@ -58,94 +67,7 @@ section {
   z-index: 40;
 }
 
-/* ============================
-   Scroll Down Button Styling
-   ============================ */
-
-.scroll-down-btn {
-  margin-top: 60px;
-  background: transparent;
-  color: var(--accent-green);
-  border: 1px solid var(--accent-green);
-  padding: 10px 26px;
-  font-size: 14px;
-  border-radius: 30px;
-  cursor: pointer;
-  letter-spacing: 0.5px;
-  font-family: "Inria Serif", serif;
-  transition: all 0.3s ease;
-  animation: bounceFade 2.4s infinite ease-in-out;
-}
-
-.scroll-down-btn:hover {
-  background: var(--accent-green);
-  color: var(--charcoal);
-  transform: translateY(-3px);
-}
-
-
-
-
-
-@keyframes bounceFade {
-  0% {
-    opacity: 0.3;
-    transform: translateY(0);
-  }
-  50% {
-    opacity: 1;
-    transform: translateY(6px);
-  }
-  100% {
-    opacity: 0.3;
-    transform: translateY(0);
-  }
-}
-
-/* ============================
-   Scroll Arrows Animation
-   ============================ */
-
-.scroll-arrows {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  gap: 0.5px;
-}
-
-.arrow-layer {
-  width: 20px;
-  height: 20px;
-  border-left: 3px solid var(--accent-green);
-  border-bottom: 3px solid var(--accent-green);
-  transform: rotate(-45deg);
-  opacity: 0.3;
-  animation: arrowBounce 1.8s infinite;
-}
-
-.arrow-layer:nth-child(2) {
-  animation-delay: 0.2s;
-  opacity: 0.5;
-}
-
-.arrow-layer:nth-child(3) {
-  animation-delay: 0.4s;
-  opacity: 0.8;
-}
-
-@keyframes arrowBounce {
-  0% {
-    transform: translateY(0) rotate(-45deg);
-  }
-  50% {
-    transform: translateY(6px) rotate(-45deg);
-  }
-  100% {
-    transform: translateY(0) rotate(-45deg);
-  }
-}
+/*----------------*/
 
 /* hero */
 
@@ -195,23 +117,94 @@ section {
   color: var(--text-main);
 }
 
-/* HISTORY + TEXT BAND */
+/*----------------*/
 
-body section.history-root {
-  background: var(--surface);
-}
+/* SCROLL down button styling */
 
-.history-root {
-  padding: 5rem 0 1.5rem;
-}
-
-.history-info {
-  padding-top: 0;
-}
-
-.history-root .info-block.green {
+.scroll-down-btn {
+  margin-top: 60px;
   background: transparent;
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+  padding: 10px 26px;
+  font-size: 14px;
+  border-radius: 30px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  font-family: "Inria Serif", serif;
+  transition: all 0.3s ease;
+  animation: bounceFade 2.4s infinite ease-in-out;
 }
+
+.scroll-down-btn:hover {
+  background: var(--accent-green);
+  color: var(--charcoal);
+  transform: translateY(-3px);
+}
+
+@keyframes bounceFade {
+  0% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+}
+
+
+/*----------------*/
+
+
+/* Scroll Arrows Animation */
+
+.scroll-arrows {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5px;
+}
+
+.arrow-layer {
+  width: 20px;
+  height: 20px;
+  border-left: 3px solid var(--accent-green);
+  border-bottom: 3px solid var(--accent-green);
+  transform: rotate(-45deg);
+  opacity: 0.3;
+  animation: arrowBounce 1.8s infinite;
+}
+
+.arrow-layer:nth-child(2) {
+  animation-delay: 0.2s;
+  opacity: 0.5;
+}
+
+.arrow-layer:nth-child(3) {
+  animation-delay: 0.4s;
+  opacity: 0.8;
+}
+
+@keyframes arrowBounce {
+  0% {
+    transform: translateY(0) rotate(-45deg);
+  }
+  50% {
+    transform: translateY(6px) rotate(-45deg);
+  }
+  100% {
+    transform: translateY(0) rotate(-45deg);
+  }
+}
+
+/*----------------*/
 
 /* headings */
 
@@ -266,6 +259,10 @@ body section.history-root {
   margin-top: 6px;
 }
 
+/*----------------*/
+
+/* rotating words */
+
 .rotating-word {
   display: inline-block;
   position: relative;
@@ -280,71 +277,99 @@ body section.history-root {
   opacity: 1;
 }
 
-/* ============================================================
-   TIKTOK CAROUSEL — SMALL CARDS + INFINITE LOOP
-   ============================================================ */
+/*----------------*/
 
-   .tiktok-carousel-section {
-    background: var(--surface-soft);
-    padding: 50px 0 50px;
-    text-align: center;
+
+/* HISTORY + TEXT BAND */
+
+body section.history-root {
+  background: var(--surface);
+}
+
+.history-root {
+  padding: 5rem 0 1.5rem;
+}
+
+.history-info {
+  padding-top: 0;
+}
+
+.history-root .info-block.green {
+  background: transparent;
+}
+
+/*----------------*/
+
+/* tiktok carousel section */
+
+
+
+.tiktok-carousel-section {
+  background: var(--surface-soft);
+  padding: 50px 0 50px;
+  text-align: center;
+}
+
+.tiktok-carousel-title {
+  color: var(--text-main);
+  font-family: "Inria Serif", serif;
+  font-size: 22px;
+  margin-bottom: 25px;
+}
+
+/* Outer wrapper for infinite scrolling */
+.tiktok-carousel-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Scrolling track */
+.tiktok-carousel {
+  display: flex;
+  gap: 20px;
+  animation: scrollLoop 22s linear infinite;
+  padding: 10px 0;
+}
+
+/* Each video card */
+.tiktok-slide {
+  flex: 0 0 auto;
+  width: 220px; /* much smaller */
+  height: 380px; /* compact card height */
+  background: var(--surface);
+  padding: 10px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transform: scale(0.85); /* shrink full embed */
+  transform-origin: top center;
+}
+
+/* Reduce iframe size inside TikTok embed */
+.tiktok-embed iframe {
+  transform: scale(0.75) translateX(-15%);
+  transform-origin: top center;
+  width: 310px !important; /* override TikTok width */
+  height: 600px !important; /* override TikTok height */
+}
+
+/* Infinite scrolling keyframes */
+@keyframes scrollLoop {
+  from {
+    transform: translateX(0);
   }
-  
-  .tiktok-carousel-title {
-    color: var(--text-main);
-    font-family: "Inria Serif", serif;
-    font-size: 22px;
-    margin-bottom: 25px;
+  to {
+    transform: translateX(-50%);
   }
-  
-  /* Outer wrapper for infinite scrolling */
-  .tiktok-carousel-wrapper {
-    overflow: hidden;
-    width: 100%;
-    position: relative;
-  }
-  
-  /* Scrolling track */
-  .tiktok-carousel {
-    display: flex;
-    gap: 20px;
-    animation: scrollLoop 22s linear infinite;
-    padding: 10px 0;
-  }
-  
-  /* Each video card */
-  .tiktok-slide {
-    flex: 0 0 auto;
-    width: 220px; /* much smaller */
-    height: 380px; /* compact card height */
-    background: var(--surface);
-    padding: 10px;
-    border-radius: 14px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.25);
-    overflow: hidden;
-    transform: scale(0.85); /* shrink full embed */
-    transform-origin: top center;
-  }
-  
-  /* Reduce iframe size inside TikTok embed */
-  .tiktok-embed iframe {
-    transform: scale(0.75) translateX(-15%);
-    transform-origin: top center;
-    width: 310px !important;   /* override TikTok width */
-    height: 600px !important;  /* override TikTok height */
-  }
-  
-  /* Infinite scrolling keyframes */
-  @keyframes scrollLoop {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  
-  /* Hide scrollbar if any */
-  .tiktok-carousel::-webkit-scrollbar {
-    display: none;
-  }
-  
+}
+
+/* Hide scrollbar if any */
+.tiktok-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+
 
 /* generic content */
 
@@ -374,12 +399,17 @@ body section.history-root {
   position: relative;
 }
 
+
+/*----------------*/
+
 /* footer */
 
 .footer-band {
   padding: 36px 0 50px;
   background: var(--charcoal);
 }
+
+/*----------------*/
 
 /* responsiveness */
 
