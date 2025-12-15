@@ -612,6 +612,12 @@
   color: var(--text-main);
 }
 
+.thrift-leaflet-map {
+  width: 100%;
+  height: 560px;
+}
+
+
 .thrift-primary {
   margin-bottom: 6px;
 }

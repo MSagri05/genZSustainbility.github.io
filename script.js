@@ -336,7 +336,7 @@ d3.csv("./assets/fashion_history.csv").then((fashion) => {
 
 // media coverage visualization
 d3.csv("./assets/media_fashion@2.csv").then((mediaRaw) => {
-  mediaClean = mediaRaw
+  const mediaClean = mediaRaw
     .filter((d) => d["Year "] && d.tite)
     .map((d) => ({
       year: +d["Year "],
@@ -847,9 +847,9 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("D3 not found. Make sure d3.v7 is included before script.js");
     return;
   }
-  if (!window.topojson) {
+  if (!window.L) {
     console.warn(
-      "topojson-client not found. Add: <script src='https://unpkg.com/topojson-client@3'></script>"
+      "Leaflet not found. Add: <script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'></script>"
     );
     return;
   }
@@ -924,16 +924,6 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   async function loadData() {
-    const world = await d3.json(
-      "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json"
-    );
-    const countries = window.topojson.feature(world, world.objects.countries);
-
-    const canadaGeo = countries.features.find(
-      (d) => d?.properties?.name === "Canada"
-    );
-    if (!canadaGeo) throw new Error("Could not find Canada geometry.");
-
     const thriftGeo = await d3.json("./assets/canada_thrift.geojson");
     const feats = thriftGeo.features ?? [];
 
@@ -961,145 +951,89 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .filter((d) => d && Number.isFinite(d.lat) && Number.isFinite(d.lon));
 
-    return { canadaGeo, thriftPoints };
+    return { thriftPoints };
   }
 
-  function renderMap({ canadaGeo, thriftPoints }) {
+  function renderMap({ thriftPoints }) {
     if (!myLocation) {
       renderEmptyState();
       return;
     }
 
-    mount.innerHTML = "";
+    // rebuild the container each time to avoid "Map container is already initialized"
+    mount.innerHTML = `
+      <div class="thrift-map-wrap">
+        <div id="thriftLeafletMap" class="thrift-leaflet-map"></div>
+      </div>
+    `;
 
-    const container = document.createElement("div");
-    container.className = "thrift-map-wrap";
-    container.style.position = "relative";
-    container.style.maxWidth = WIDTH + "px";
-
-    const tip = document.createElement("div");
-    tip.className = "thrift-tooltip";
-    container.appendChild(tip);
-
-    const svg = d3
-      .create("svg")
-      .attr("viewBox", [0, 0, WIDTH, HEIGHT])
-      .attr("class", "thrift-svg");
-
-    const projection = d3.geoMercator().fitSize([WIDTH, HEIGHT], canadaGeo);
-    const path = d3.geoPath(projection);
-
-    const g = svg.append("g");
-
-    g.append("path")
-      .datum(canadaGeo)
-      .attr("d", path)
-      .attr("fill", "#f2f2f2")
-      .attr("stroke", "#2a3029")
-      .attr("stroke-width", 1.2);
-
-    const xy = (d) => projection([d.lon, d.lat]);
+    const mapDiv = document.getElementById("thriftLeafletMap");
+    if (!mapDiv || !window.L) return;
 
     const nearest = getNearest(thriftPoints, myLocation, 10);
     renderNearestList(nearest);
 
-    const nearestSet = new Set(
+    const nearestKey = new Set(
       nearest.map((d) => `${d.lat},${d.lon},${d.name}`)
     );
+    const isNearest = (d) => nearestKey.has(`${d.lat},${d.lon},${d.name}`);
 
-    // helper MUST be after nearestSet exists (fixes crash)
-    const baseRadius = (d, k) =>
-      nearestSet.has(`${d.lat},${d.lon},${d.name}`)
-        ? Math.max(1.6, 4.2 / k)
-        : Math.max(1.2, 2.8 / k);
+    const map = L.map(mapDiv, {
+      zoomControl: true,
+      scrollWheelZoom: true,
+    });
 
-    const dots = g
-      .append("g")
-      .selectAll("circle")
-      .data(thriftPoints)
-      .join("circle")
-      .attr("cx", (d) => xy(d)[0])
-      .attr("cy", (d) => xy(d)[1])
-      .attr("r", (d) => baseRadius(d, 1))
-      .attr("fill", "#9bc07e")
-      .attr("opacity", (d) =>
-        nearestSet.has(`${d.lat},${d.lon},${d.name}`) ? 0.95 : 0.55
-      )
-      .attr("stroke", "#2a3029")
-      .attr("stroke-width", 0.4);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
 
-    const meXY = projection([myLocation.lon, myLocation.lat]);
-    const meDot = g
-      .append("circle")
-      .attr("cx", meXY[0])
-      .attr("cy", meXY[1])
-      .attr("r", 6)
-      .attr("fill", "#2a3029")
-      .attr("stroke", "white")
-      .attr("stroke-width", 2);
+    // You marker
+    const youMarker = L.circleMarker([myLocation.lat, myLocation.lon], {
+      radius: 7,
+      color: "#ffffff",
+      weight: 2,
+      fillColor: "#2a3029",
+      fillOpacity: 1,
+    })
+      .addTo(map)
+      .bindPopup("You");
 
-    const meLabel = g
-      .append("text")
-      .attr("x", meXY[0] + 8)
-      .attr("y", meXY[1] + 4)
-      .text("You")
-      .style("font-size", "12px")
-      .style("fill", "#2a3029");
+    // Thrift markers
+    thriftPoints.forEach((d) => {
+      const near = isNearest(d);
 
-    dots
-      .on("mouseenter", function (event, d) {
-        d3.select(this).attr("opacity", 1).attr("r", 6).attr("stroke-width", 1.2);
+      const marker = L.circleMarker([d.lat, d.lon], {
+        radius: near ? 7 : 4,
+        color: "#2a3029",
+        weight: near ? 1.2 : 0.6,
+        fillColor: "#9bc07e",
+        fillOpacity: near ? 0.95 : 0.55,
+      }).addTo(map);
 
-        const km = haversineKm(myLocation, d);
+      const km = haversineKm(myLocation, d);
+      const address =
+        [d.street, d.city].filter(Boolean).join(", ") ||
+        "Exact address not available";
 
-        tip.innerHTML = `
-          <div class="thrift-tip-title">${escapeHtml(d.name)}</div>
-          <div class="thrift-tip-sub">${escapeHtml(
-            [d.street, d.city].filter(Boolean).join(", ") ||
-              "Exact address not available"
-          )}</div>
-          <div>Distance: <strong>${km.toFixed(2)} km</strong></div>
-        `;
-        tip.style.opacity = 1;
-      })
-      .on("mousemove", function (event) {
-        const bounds = container.getBoundingClientRect();
-        tip.style.left = event.clientX - bounds.left + 14 + "px";
-        tip.style.top = event.clientY - bounds.top + 14 + "px";
-      })
-      .on("mouseleave", function () {
-        d3.select(this).attr("opacity", 0.65).attr("r", baseRadius(d3.select(this).datum(), 1)).attr("stroke-width", 0.4);
-        tip.style.opacity = 0;
-      });
+      marker.bindPopup(
+        `<strong>${escapeHtml(d.name)}</strong><br>${escapeHtml(
+          address
+        )}<br><strong>${km.toFixed(2)} km</strong>`
+      );
+    });
 
-    // Zoom / pan (shrink circles with zoom)
-    const zoom = d3
-      .zoom()
-      .scaleExtent([1, 12])
-      .on("zoom", (event) => {
-        g.attr("transform", event.transform);
+    // Fit bounds to "You" + nearest 10
+    const boundsPts = [
+      [myLocation.lat, myLocation.lon],
+      ...nearest.map((d) => [d.lat, d.lon]),
+    ];
 
-        const k = event.transform.k;
+    const bounds = L.latLngBounds(boundsPts);
+    map.fitBounds(bounds, { padding: [30, 30] });
 
-        dots
-          .attr("r", (d) => baseRadius(d, k))
-          .attr("stroke-width", Math.max(0.2, 0.4 / k));
-
-        // keep "You" marker readable too
-        meDot.attr("r", Math.max(3.5, 6 / k));
-        meLabel.style("font-size", `${Math.max(9, 12 / k)}px`);
-      });
-
-    svg.call(zoom);
-
-    // Auto-zoom toward your location
-    const k0 = 3.2;
-    const tx = WIDTH / 2 - meXY[0] * k0;
-    const ty = HEIGHT / 2 - meXY[1] * k0;
-    svg.call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(k0));
-
-    container.appendChild(svg.node());
-    mount.appendChild(container);
+    // optional: open "You" popup
+    // youMarker.openPopup();
   }
 
   async function useBrowserLocation() {
