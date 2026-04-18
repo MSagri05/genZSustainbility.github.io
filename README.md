@@ -4,6 +4,17 @@ This is a team project created for **IAT 355 – Introduction to Visual Analytic
 
 The goal of this assignment was visual storytelling. We were asked to apply data visualization concepts learned in class to a topic of our choice and use visuals to tell a clear, engaging story rather than simply present data.
 
+## Live Website
+
+https://msagri05.github.io/genZSustainbility.github.io/
+
+## Team Members
+
+- Manmeet Sagri  
+- Hind Hammad  
+- Lanre Alegbeleye  
+
+
 ## Project Overview
 
 We chose this topic because it comes directly from our own experience as Gen Z. There is a common perception that Gen Z is only driven by trends, but we wanted to challenge that idea. As Gen Z consumers, we have seen firsthand the environmental impact of fast fashion and the growing shift toward more sustainable choices.
@@ -31,14 +42,7 @@ Each visualization supports a specific part of the story and connects to the nex
 - Observable-inspired visualization techniques  
 - GitHub Pages for deployment  
 
-## Team Members
 
-- Manmeet Sagri  
-- Hind Hammad  
-- Lanre Alegbeleye  
 
-## Live Website
-
-https://msagri05.github.io/genZSustainbility.github.io/
 
 
